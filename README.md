@@ -46,7 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -232,6 +232,9 @@ let request = ChatRequest {
         attachments: Some(vec![Attachment {
             url: upload_result.attachment_url,
             content_type: upload_result.mime_type,
+            name: Some("document.pdf".to_string()),
+            inline_ref: None,
+            parsed_content: None,
         }]),
     }],
     // 其他欄位...
@@ -322,3 +325,5 @@ let client = PoeClient::new(
 - `get_model_list` 不需要訪問密鑰，可以直接使用。
 - `get_v1_model_list` 需要訪問密鑰，並作為 PoeClient 的方法調用。
 - 檔案上傳功能受到 Poe 平台的檔案大小和類型限制。
+- Bot 串流請求使用 `Authorization: Bearer <API_KEY>`，並會自動添加 `Accept: text/event-stream`、`Cache-Control: no-store`、`Content-Type: application/json`。
+- 檔案上傳端點使用純 API key（不帶 `Bearer` 前綴）。

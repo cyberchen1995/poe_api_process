@@ -45,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -231,6 +231,9 @@ let request = ChatRequest {
         attachments: Some(vec![Attachment {
             url: upload_result.attachment_url,
             content_type: upload_result.mime_type,
+            name: Some("document.pdf".to_string()),
+            inline_ref: None,
+            parsed_content: None,
         }]),
     }],
     // Other fields...
@@ -321,3 +324,5 @@ let client = PoeClient::new(
 - `get_model_list` doesn't require an access key and can be used directly.
 - `get_v1_model_list` requires an access key and is called as a PoeClient method.
 - File upload functionality is subject to Poe platform's file size and type limitations.
+- Bot streaming requests send `Authorization: Bearer <API_KEY>` and automatically include `Accept: text/event-stream`, `Cache-Control: no-store`, and `Content-Type: application/json`.
+- The file upload endpoint uses the raw API key without the `Bearer` prefix.

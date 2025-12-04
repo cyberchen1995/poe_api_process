@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -214,6 +214,9 @@ let request = ChatRequest {
         attachments: Some(vec![Attachment {
             url: upload_result.attachment_url,
             content_type: upload_result.mime_type,
+            name: Some("document.pdf".to_string()),
+            inline_ref: None,
+            parsed_content: None,
         }]),
     }],
     // 其他字段...
@@ -298,3 +301,5 @@ poe_api_process = { version = "0.4.5", features = ["trace"] }
 - `get_v1_model_list` 需要通过 PoeClient 实例调用，需要访问密钥。
 - 文件上传功能受到 Poe 平台的文件大小和类型限制。
 - URL 参数会自动处理末尾的斜线，确保格式正确。
+- Bot 串流请求使用 `Authorization: Bearer <API_KEY>`，并会自动添加 `Accept: text/event-stream`、`Cache-Control: no-store`、`Content-Type: application/json`。
+- 文件上传端点使用原始 API key（不带 `Bearer` 前缀）。

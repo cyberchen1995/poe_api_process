@@ -4,7 +4,7 @@ use futures_util::Stream;
 use futures_util::StreamExt;
 use futures_util::future::join_all;
 use reqwest::Client;
-use reqwest::header::{COOKIE, HeaderMap, HeaderValue};
+use reqwest::header::{ACCEPT, CACHE_CONTROL, CONTENT_TYPE, COOKIE, HeaderMap, HeaderValue};
 use serde_json::Value;
 use std::path::Path;
 use std::pin::Pin;
@@ -104,7 +104,10 @@ impl PoeClient {
         let response = self
             .client
             .post(&url)
+            .header(ACCEPT, "text/event-stream")
+            .header(CACHE_CONTROL, "no-store")
             .header("Authorization", format!("Bearer {}", self.access_key))
+            .header(CONTENT_TYPE, "application/json")
             .json(&request)
             .send()
             .await?;
@@ -943,7 +946,8 @@ impl PoeClient {
         let response = self
             .client
             .post(&self.poe_file_upload_url)
-            .header("Authorization", format!("Bearer {}", self.access_key))
+            // 檔案上傳端點需要純 API key，不添加 Bearer 前綴
+            .header("Authorization", self.access_key.clone())
             .multipart(form)
             .send()
             .await

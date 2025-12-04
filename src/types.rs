@@ -41,6 +41,12 @@ pub struct Attachment {
     pub url: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inline_ref: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parsed_content: Option<String>,
 }
 
 // 工具定義相關結構

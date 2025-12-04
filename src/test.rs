@@ -49,7 +49,7 @@ async fn test_stream_request() {
     );
 
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -148,7 +148,7 @@ async fn test_stream_content_verification() {
     );
 
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -234,7 +234,7 @@ async fn test_stream_tool_content_verification() {
 
     // 創建帶有工具定義的請求
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -511,7 +511,7 @@ async fn test_file_upload() {
         .await
         .expect("文件上傳失敗");
     let request = ChatRequest {
-        version: "1.1".to_string(),
+        version: "1.2".to_string(),
         r#type: "query".to_string(),
         query: vec![ChatMessage {
             role: "user".to_string(),
@@ -520,6 +520,9 @@ async fn test_file_upload() {
             attachments: Some(vec![Attachment {
                 url: file_upload_response.attachment_url,
                 content_type: file_upload_response.mime_type,
+                name: Some("test_upload.txt".to_string()),
+                inline_ref: None,
+                parsed_content: None,
             }]),
         }],
         temperature: None,
@@ -650,12 +653,12 @@ async fn test_get_v1_model_list() {
         Ok(models) => {
             assert!(!models.data.is_empty(), "v1/models 模型列表不應為空");
             debug!("成功獲取 {} 個 v1 模型", models.data.len());
-
+            
             // 驗證第一個模型的基本資訊
             if let Some(first_model) = models.data.first() {
                 assert!(!first_model.id.is_empty(), "模型 ID 不應為空");
                 assert_eq!(first_model.object, "model", "模型類型應為 'model'");
-                assert_eq!(first_model.owned_by, "poe", "模型擁有者應為 'poe'");
+                assert_eq!(first_model.owned_by, "Poe", "模型擁有者應為 'Poe'");
 
                 debug!("第一個 v1 模型資訊：");
                 debug!("ID: {}", first_model.id);
